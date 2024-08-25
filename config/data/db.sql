@@ -1,51 +1,85 @@
+-- Xóa cơ sở dữ liệu nếu nó tồn tại
+DROP DATABASE IF EXISTS shopp;
+
+-- Tạo cơ sở dữ liệu mới
 CREATE DATABASE shopp;
-USE  shopp;
-CREATE TABLE users(
+
+-- Chọn cơ sở dữ liệu để sử dụng
+USE shopp;
+
+-- Tạo bảng users
+CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    email varchar(255) null,
-    name varchar(255) null,
-    pass_word varchar(255) null
+    email VARCHAR(255) NULL,
+    name VARCHAR(255) NULL,
+    pass_word VARCHAR(255) NULL,
+    role INT NULL DEFAULT 0
 );
 
+-- Tạo bảng categories
 CREATE TABLE categories (
-    id int PRIMARY KEY,
-    name varchar(255) null
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NULL
 );
 
+-- Tạo bảng cart
 CREATE TABLE cart (
-    id int AUTO_INCREMENT PRIMARY KEY,
-    uid int NULL,
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    uid INT NULL,
     FOREIGN KEY (uid) REFERENCES users(id)
 );
 
+-- Tạo bảng products
 CREATE TABLE products (
-    id int AUTO_INCREMENT PRIMARY KEY,
-    quantity int null,
-    name varchar(255) null,
-    price varchar(255) null,
-    category_id int null ,
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    quantity INT NULL,
+    name VARCHAR(255) NULL,
+    price DECIMAL(10, 2) NULL, -- Thay varchar bằng decimal cho giá
+    category_id INT NULL,
     FOREIGN KEY (category_id) REFERENCES categories(id)
 );
 
+-- Tạo bảng images
 CREATE TABLE images (
-    id int AUTO_INCREMENT PRIMARY KEY,
-    url varchar(255) null,
-    product_id int null,
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    url VARCHAR(255) NULL,
+    product_id INT NULL,
     FOREIGN KEY (product_id) REFERENCES products(id)
 );
 
+-- Tạo bảng cart_item
 CREATE TABLE cart_item (
-    id int AUTO_INCREMENT PRIMARY KEY,
-    uid int null,
-    cart_id int null,
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    uid INT NULL,
+    cart_id INT NULL,
     FOREIGN KEY (uid) REFERENCES users(id),
-    FOREIGN KEY (cart_id) REFERENCES cart(id)
+    FOREIGN KEY (cart_id) REFERENCES cart(id),
+    total INT DEFAULT 0
 );
 
+-- Tạo bảng wishlist
 CREATE TABLE wishlist (
-    id int PRIMARY KEY,
-    uid int null,
-    product_id int null,
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    uid INT NULL,
+    product_id INT NULL,
     FOREIGN KEY (uid) REFERENCES users(id),
     FOREIGN KEY (product_id) REFERENCES products(id)
+);
+
+-- Tạo bảng orders
+CREATE TABLE orders (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    uid INT NULL,
+    status INT DEFAULT 0,
+    FOREIGN KEY (uid) REFERENCES users(id)
+);
+
+-- Tạo bảng order_item
+CREATE TABLE order_item (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    product_id INT NULL,
+    order_id INT NULL,
+    quantity INT DEFAULT 1,
+    FOREIGN KEY (product_id) REFERENCES products(id),
+    FOREIGN KEY (order_id) REFERENCES orders(id) -- Sửa từ order thành orders
 );
