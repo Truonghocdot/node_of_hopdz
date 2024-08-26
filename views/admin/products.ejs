@@ -1,1 +1,220 @@
 <% layout('../layouts/admin') -%>
+<div class="layout-page">
+  <nav
+    class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
+    id="layout-navbar"
+  >
+    <div
+      class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none"
+    >
+      <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
+        <i class="bx bx-menu bx-sm"></i>
+      </a>
+    </div>
+    <div
+      class="navbar-nav-right d-flex align-items-center"
+      id="navbar-collapse"
+    >
+      <form class="navbar-nav align-items-center" method="GET">
+        <div class="nav-item d-flex align-items-center">
+          <i class="bx bx-search fs-4 lh-0"></i>
+          <input
+            type="text"
+            name="name"
+            class="form-control border-0 shadow-none"
+            placeholder="Search..."
+            aria-label="Search..."
+          />
+        </div>
+      </form>
+
+      <ul class="navbar-nav flex-row align-items-center ms-auto">
+        <li>
+          <a class="dropdown-item" href="auth-login-basic.html">
+            <i class="bx bx-power-off me-2"></i>
+            <span class="align-middle">Log Out</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <div class="content-wrapper">
+    <div class="container-xxl flex-grow-1 container-p-y">
+      <h4 class="fw-bold py-3 mb-4">
+        <span class="text-muted fw-light">Product /</span> 
+      </h4>
+      <div class="row">
+        <div class="col-xl">
+          <div class="card mb-4">
+            <div
+              class="card-header d-flex justify-content-between align-items-center"
+            >
+              <h5 class="mb-0">Add new product</h5>
+            </div>
+            <div class="card-body">
+              <form action="/admin/product/add" method="POST" enctype="multipart/form-data">
+                <div class="mb-3">
+                  <label class="form-label" 
+                    >Name</label
+                  >
+                  <input
+                    type="text"
+                    name="name"
+                    class="form-control"
+                    id="basic-default-fullname"
+                    placeholder="Product"
+                  />
+                </div>
+                <div class="mb-3">
+                  <label class="form-label" 
+                    >Count</label
+                  >
+                  <input
+                    type="text"
+                    name="count"
+                    class="form-control"
+                    id="basic-default-fullname"
+                    placeholder="Count"
+                  />
+                </div>
+                <div class="mb-3">
+                  <label class="form-label" 
+                    >Price</label
+                  >
+                  <input
+                    type="text"
+                    name="price"
+                    class="form-control"
+                    id="basic-default-fullname"
+                    placeholder="Price"
+                  />
+                </div>
+                <div class="mb-3">
+                  <label class="form-label" 
+                    >image</label
+                  >
+                  <input
+                  type="file"
+                  name="image"
+                  class="form-control"
+                  id="imageInput"
+                  accept="image/*"  
+                  />
+                  <img id="imagePreview" src="" alt="Image Preview" style="max-width: 80px; height: auto; display: none;" />  
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label" 
+                    >Category</label
+                  >
+                  <select name="category_id" id="" class="form-control">
+                <% categories.forEach(function (cat) { %>
+                  <option value="<%= cat.id %>"><%= cat.name %></option>
+                  <% }) %>
+                  </select>                  
+                </div>
+                <button type="submit" class="btn btn-primary">Add</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <h5 class="card-header">Lists</h5>
+        <div class="table-responsive text-nowrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>id</th>
+                <th>Name</th>
+                <th>Count</th>
+                <th>Image</th>
+                <th>Price</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody class="table-border-bottom-0">
+                <% products.forEach(function (pro) { %>
+                    <tr>
+                        <form action="/admin/product/edit?_method=PATCH" method="POST" enctype="multipart/form-data">
+                            <td><%= pro.id %></td>
+                            <td>
+                                <i class="fab fa-angular fa-lg text-danger me-3"></i>
+                                <input type="text" class="form-control" name="name" value="<%= pro.name %>">
+                            </td>
+                            <td>
+                              <i class="fab fa-angular fa-lg text-danger me-3"></i>
+                              <input type="text" class="form-control" name="count" value="<%= pro.quantity %>">
+                          </td>
+                          <td>
+                            <input type="file" 
+                            name="image"
+                            id="imageInput2"
+                            accept="image/*" 
+                             >
+                          <img id="imagePreview2" src="/uploads/<%= pro.img %>" alt="Image Preview" style="max-width: 80px; height: auto; display: block;" />  
+                            
+                          </td>
+                          <td>
+                            <i class="fab fa-angular fa-lg text-danger me-3"></i>
+                            <input type="text" class="form-control" name="price" value="<%= pro.price %>">
+                        </td>
+                            <td>
+                                <div class="">
+                                    <button type="submit" class="dropdown-item">
+                                        <i class="bx bx-edit-alt me-1"></i> Save
+                                    </button>
+                                </div>
+                            </td>
+                            <input type="hidden" name="id" value="<%= pro.id %>">
+                        </form>
+                        <td>
+                            <form action="/admin/product/delete?_method=DELETE" method="POST">
+                                <input type="hidden" name="id" value="<%= pro.id %>">
+                                <button type="submit" class="dropdown-item">
+                                    <i class="bx bx-trash me-1"></i> Delete
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+               <% }) %>
+              </tbody>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  document.addEventListener("DOMContentLoaded",() => {
+    document.getElementById('imageInput').addEventListener('change', function(event) {
+    const file = event.target.files[0];  
+    if (file) {
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            const imagePreview = document.getElementById('imagePreview');
+            imagePreview.src = e.target.result;  
+            imagePreview.style.display = 'block';  
+        };
+
+        reader.readAsDataURL(file);  
+    }
+});
+
+document.getElementById('imageInput2').addEventListener('change', function(event) {
+    const file = event.target.files[0];  
+    if (file) {
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            const imagePreview = document.getElementById('imagePreview2');
+            imagePreview.src = e.target.result;  
+        };
+
+        reader.readAsDataURL(file);  
+    }
+});
+  })
+</script>

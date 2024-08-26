@@ -19,7 +19,9 @@ CREATE TABLE users (
 -- Tạo bảng categories
 CREATE TABLE categories (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NULL
+    name VARCHAR(255) NULL,
+    img VARCHAR(255) null
+
 );
 
 -- Tạo bảng cart
@@ -36,15 +38,8 @@ CREATE TABLE products (
     name VARCHAR(255) NULL,
     price DECIMAL(10, 2) NULL, -- Thay varchar bằng decimal cho giá
     category_id INT NULL,
+    img VARCHAR(255) null,
     FOREIGN KEY (category_id) REFERENCES categories(id)
-);
-
--- Tạo bảng images
-CREATE TABLE images (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    url VARCHAR(255) NULL,
-    product_id INT NULL,
-    FOREIGN KEY (product_id) REFERENCES products(id)
 );
 
 -- Tạo bảng cart_item

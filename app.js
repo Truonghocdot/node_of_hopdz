@@ -8,6 +8,9 @@ const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const cors = require("cors");
 const engine = require("ejs-locals")
+const methodOverride = require('method-override');
+
+app.use(methodOverride('_method'));
 app.use(morgan("tiny"));
 app.engine("ejs", engine);
 app.use(bodyParser.json());
