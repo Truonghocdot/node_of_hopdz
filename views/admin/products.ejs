@@ -30,7 +30,7 @@
 
       <ul class="navbar-nav flex-row align-items-center ms-auto">
         <li>
-          <a class="dropdown-item" href="auth-login-basic.html">
+          <a class="dropdown-item" href="/logout">
             <i class="bx bx-power-off me-2"></i>
             <span class="align-middle">Log Out</span>
           </a>
@@ -105,6 +105,12 @@
 
                 <div class="mb-3">
                   <label class="form-label" 
+                    >Description</label
+                  >
+                 <textarea id="" name="description" class="form-control"></textarea>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label" 
                     >Category</label
                   >
                   <select name="category_id" id="" class="form-control">
@@ -131,6 +137,7 @@
                 <th>Image</th>
                 <th>Price</th>
                 <th>Actions</th>
+                <th>Description</th>
               </tr>
             </thead>
             <tbody class="table-border-bottom-0">
@@ -168,6 +175,7 @@
                             </td>
                             <input type="hidden" name="id" value="<%= pro.id %>">
                         </form>
+                        <td><input type="text" name="description" value="<%= pro.description %>"></td>
                         <td>
                             <form action="/admin/product/delete?_method=DELETE" method="POST">
                                 <input type="hidden" name="id" value="<%= pro.id %>">

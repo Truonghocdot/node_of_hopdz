@@ -3,8 +3,31 @@ const path = require('path');
 const pool = require("../../config/data/connect.js");
 
 class dashboardController {
-    index(req, res, next) {
-        return res.render("admin/home");
+    async index(req, res, next) {
+        try {
+            const query = `
+                SELECT 
+                    (SELECT COUNT(*) FROM products) AS productCount,
+                    (SELECT COUNT(*) FROM categories) AS categoryCount,
+                    (SELECT COUNT(*) FROM blogs) AS blogCount,
+                    (SELECT COUNT(*) FROM orders) AS orderCount,
+                    (SELECT COUNT(*) FROM users) AS userCount
+            `;
+
+            const [[result]] = await pool.promise().query(query);
+
+            const { productCount, categoryCount, blogCount, orderCount, userCount } = result;
+
+            return res.render("admin/home", {
+                products: productCount,
+                categories: categoryCount,
+                blogs: blogCount,
+                orders: orderCount,
+                account: userCount,
+            });
+        } catch (err) {
+            next(err);
+        }
     }
 
     async categories(req, res, next) {
@@ -70,10 +93,10 @@ class dashboardController {
 
     async add_product(req, res, next) {
         try {
-            const { name, price, count, category_id } = req.body;
+            const { name, price, count, category_id, description } = req.body;
             const img = req.file ? req.file.filename : null;
-            const query = "INSERT INTO products (name, price, quantity, category_id, img) VALUES (?, ?, ?, ?, ?)";
-            await pool.promise().query(query, [name, price, count, category_id, img]);
+            const query = "INSERT INTO products (name, price, quantity, category_id, img, description) VALUES (?, ?, ?, ?, ?,?)";
+            await pool.promise().query(query, [name, price, count, category_id, img, description]);
             return res.redirect("/admin/products");
         } catch (err) {
             return res.redirect('back');
@@ -93,11 +116,11 @@ class dashboardController {
 
     async edit_product(req, res, next) {
         try {
-            const { id, name, price, count, category_id } = req.body;
+            const { id, name, price, count, category_id, description } = req.body;
             const img = req.file ? req.file.filename : null;
 
-            let query = "UPDATE products SET name = ?, price = ?, quantity = ?, category_id = ?";
-            const params = [name, price, count, category_id];
+            let query = "UPDATE products SET name = ?, price = ?, quantity = ?, category_id = ?, description = ?";
+            const params = [name, price, count, category_id, description];
 
             if (img) {
                 query += ", img = ?";

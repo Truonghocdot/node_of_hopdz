@@ -5,3 +5,4 @@ function routes(app) {
     app.use("/admin",adminRoutes);
 }
 module.exports = routes;
+

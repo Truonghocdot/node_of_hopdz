@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv").config();
 const routes = require("./routes/index.js");
@@ -9,6 +10,7 @@ const morgan = require("morgan");
 const cors = require("cors");
 const engine = require("ejs-locals")
 const methodOverride = require('method-override');
+const globalDataMiddleware = require("./middleware/globalDateMiddleware.js");
 
 app.use(methodOverride('_method'));
 app.use(morgan("tiny"));
@@ -21,6 +23,17 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
 
 app.use(cookieParser());
+app.use(session({
+    secret: 'hihi',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        secure: false, 
+        maxAge: 24 * 60 * 60 * 1000
+    }
+}));
+
+app.use(globalDataMiddleware)
 routes(app);
 app.listen(process.env.PORT || 8000, (err, result) => {
     if (err) {
